@@ -1,320 +1,62 @@
-<!doctype html>
-<html lang="zh-Hant">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <meta name="theme-color" content="#ee344b" />
-    <meta
-      name="description"
-      content="和重音 Teto 一起，把每一次敲擊變成音樂。32 種人聲、繽紛動畫，點擊、滑動或敲下鍵盤就能演奏。"
-    />
-    <meta property="og:title" content="Tetotap — 把節奏交給 Teto" />
-    <meta
-      property="og:description"
-      content="點一下，テト一下。重音 Teto 的互動聲音遊樂場。"
-    />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="icon.png" />
-    <title>Tetotap — 把節奏交給 Teto</title>
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <link rel="alternate icon" href="favicon.ico" />
-    <link rel="apple-touch-icon" href="icon.png" />
-    <link rel="stylesheet" href="css/css.css" />
-    <link rel="stylesheet" href="css/tetotap.css" />
-    <script defer src="js/pixi.min.js"></script>
-    <script defer src="js/gsap.min.js"></script>
-    <script defer src="js/tetotap.js"></script>
-  </head>
-  <body>
-    <svg
-      class="svg-symbols"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
-      <symbol id="icon-arrow" viewBox="0 0 24 24">
-        <path d="M5 12h14m-6-6 6 6-6 6" />
-      </symbol>
-      <symbol id="icon-sound" viewBox="0 0 24 24">
-        <path
-          d="M11 5 6 9H3v6h3l5 4V5Zm4 3a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"
-        />
-      </symbol>
-      <symbol id="icon-expand" viewBox="0 0 24 24">
-        <path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" />
-      </symbol>
-      <symbol id="icon-close" viewBox="0 0 24 24">
-        <path d="m6 6 12 12M6 18 18 6" />
-      </symbol>
-    </svg>
-    <div
-      id="view"
-      aria-label="Teto 演奏區：點擊或滑動，也可以使用鍵盤"
-      role="application"
-      tabindex="-1"
-      aria-hidden="true"
-    ></div>
-    <main id="scene_top">
-      <header class="site-header">
-        <a class="wordmark" href="./" aria-label="Tetotap 首頁"
-          ><img
-            src="assets/teto-mark.svg"
-            alt=""
-            width="34"
-            height="34"
-          />tetotap<span class="brand-dot">●</span></a
-        >
-        <div class="header-right">
-          <span class="sound-note"
-            ><svg class="icon"><use href="#icon-sound" /></svg
-            >聲音開了，快樂就來了</span
-          ><button id="bt_about" class="about-button" type="button" data-about>
-            關於 Tetotap <span>↗</span>
-          </button>
-        </div>
-      </header>
-      <div class="hero">
-        <section class="hero-copy" aria-labelledby="hero-title">
-          <p class="eyebrow">
-            <span class="tiny-star">✳</span> KASANE TETO SOUND PLAYGROUND
-          </p>
-          <h1 id="hero-title">
-            TETO<br /><span class="tap-word"
-              >TAP<span class="title-star" aria-hidden="true">✳</span></span
-            ><span class="sr-only"> — 重音 Teto 的聲音遊樂場</span>
-          </h1>
-          <p class="hero-description">
-            點一下，<span class="red">テト</span>一下。
-          </p>
-          <p class="hero-detail">
-            把每一次敲擊，變成 Teto 的聲音。<br />不需要樂譜，你的直覺就是節奏。
-          </p>
-          <div class="ok start-wrap">
-            <button id="bt_start" class="start-button" type="button">
-              <span class="play-icon" aria-hidden="true">▶</span>開始玩吧<svg
-                class="icon"
-              >
-                <use href="#icon-arrow" />
-              </svg>
-            </button>
-            <p class="attention">戴上耳機，讓 Teto 接管你的世界。</p>
-          </div>
-          <div id="ng" role="alert">
-            <p class="atten">
-              這個瀏覽器無法播放互動音訊，請使用支援 Web Audio 的瀏覽器。
-            </p>
-          </div>
-          <div class="keyboard-hint" aria-hidden="true">
-            <div class="keycaps">
-              <kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>F</kbd>
-            </div>
-            <span>隨便敲，都好聽。</span><span class="hint-arrow">↖</span>
-          </div>
-        </section>
-        <div
-          class="hero-art"
-          aria-label="紅色雙鑽頭髮型的重音 Teto 插畫"
-          role="img"
-        >
-          <div class="art-orbit orbit-one"></div>
-          <div class="art-orbit orbit-two"></div>
-          <div class="art-halo">
-            <div class="halo-type">TETO TETO TETO TETO TETO TETO</div>
-          </div>
-          <span class="art-spark spark-one" aria-hidden="true">✦</span
-          ><span class="art-spark spark-two" aria-hidden="true">✳</span
-          ><span class="art-spark spark-three" aria-hidden="true">+</span
-          ><span class="art-japanese" lang="ja">重音テト</span>
-          <img
-            class="teto-character"
-            src="assets/teto.svg"
-            width="480"
-            height="520"
-            alt=""
-          />
-          <div class="art-sticker">
-            <span>100%</span> TETO ENERGY <span aria-hidden="true">↗</span>
-          </div>
-          <div class="art-caption">
-            <span class="live-dot"></span> TWIN DRILLS. INFINITE THRILLS.
-          </div>
-          <span class="art-serial">NO. 0401 / EST. 2008</span>
-        </div>
-      </div>
-      <footer class="site-footer">
-        <div class="footer-tag">
-          <span class="equalizer" aria-hidden="true"
-            ><i></i><i></i><i></i><i></i><i></i></span
-          ><span>32 種聲音<span class="footer-cross">×</span>無限種節奏</span>
-        </div>
-        <p>點擊<span>・</span>滑動<span>・</span>鍵盤，隨你玩。</p>
-        <span class="footer-love"
-          >MADE FOR THE LOVE OF TETO <span>♥</span></span
-        >
-      </footer>
-    </main>
-    <section id="scene_loading" aria-live="polite" aria-label="載入 Teto 音效">
-      <img
-        src="assets/teto-mark.svg"
-        width="64"
-        height="64"
-        alt=""
-        class="loading-mark"
-      />
-      <p class="eyebrow">TETO IS WARMING UP</p>
-      <h2>テト，準備登場。</h2>
-      <p id="loading_message">
-        正在準備聲音與節奏… <span id="loading_percent">0%</span>
-      </p>
-      <div
-        class="loading-track"
-        role="progressbar"
-        aria-label="音效載入進度"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow="0"
-      >
-        <span id="loading_progress"></span>
-      </div>
-      <button id="bt_retry" class="small-button" type="button" hidden>
-        重新載入
-      </button>
-    </section>
-    <section id="scene_main" aria-label="Teto 聲音遊樂場">
-      <div class="play-header">
-        <button id="bt_back" type="button" class="hud-button">
-          ←<span>返回</span></button
-        ><span class="live-label"
-          ><span class="live-dot"></span>TETO / LIVE</span
-        ><button
-          id="bt_fs"
-          type="button"
-          class="hud-button"
-          aria-label="切換全螢幕"
-        >
-          <svg class="icon"><use href="#icon-expand" /></svg><span>全螢幕</span>
-        </button>
-      </div>
-      <div class="play-center" aria-hidden="true">
-        <span class="play-watermark">TETO!</span
-        ><img
-          id="teto_reaction"
-          src="assets/teto.svg"
-          width="200"
-          height="217"
-          alt=""
-        />
-        <p id="sound_label">LET'S TETO.</p>
-      </div>
-      <div class="play-stats">
-        <span id="tap_count">000</span><span>TAPS OF HAPPINESS</span>
-      </div>
-      <div class="set">
-        <p class="attention">點擊、拖曳，或按 A–Z / 0–5，自由演奏。</p>
-        <div class="play-controls">
-          <button
-            id="bt_feedback"
-            class="toggle-button"
-            type="button"
-            aria-pressed="true"
-          >
-            觸控光效 <span class="toggle-state">開</span></button
-          ><span class="control-divider"></span
-          ><button
-            id="bt_backtrack"
-            class="toggle-button"
-            type="button"
-            aria-pressed="true"
-          >
-            伴奏 <span class="toggle-state">開</span></button
-          ><span class="control-divider"></span
-          ><button class="toggle-button" type="button" data-about>
-            關於 <span>↗</span>
-          </button>
-        </div>
-      </div>
-    </section>
-    <dialog id="about" aria-labelledby="about_title">
-      <div id="about_in">
-        <button
-          id="bt_close"
-          type="button"
-          class="close-button"
-          aria-label="關閉關於視窗"
-        >
-          <svg class="icon"><use href="#icon-close" /></svg></button
-        ><img src="assets/teto-mark.svg" width="44" height="44" alt="" />
-        <p class="eyebrow">A LITTLE CHAOS. A LOT OF TETO.</p>
-        <h2 id="about_title">全部都是，Teto。</h2>
-        <p class="about-intro">
-          一個為重音テト而生的聲音遊樂場。<br />點擊、滑動、敲鍵盤，讓雙鑽頭跟著你的節奏轉。
-        </p>
-        <dl class="credits">
-          <div>
-            <dt>主角與人聲</dt>
-            <dd>
-              <a
-                href="https://kasaneteto.jp/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >重音テト / Kasane Teto ↗</a
-              ><br /><small>UTAU 歌唱合成 · 音聲製作：小山乃舞世</small>
-            </dd>
-          </div>
-          <div>
-            <dt>原作與互動動畫</dt>
-            <dd>
-              <a
-                href="https://aidn.jp/mikutap/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Mikutap — daniwell ↗</a
-              >
-            </dd>
-          </div>
-          <div>
-            <dt>移植版本</dt>
-            <dd>
-              <a
-                href="https://github.com/HFIProgramming/mikutap"
-                target="_blank"
-                rel="noopener noreferrer"
-                >HFIProgramming / mikutap ↗</a
-              >
-            </dd>
-          </div>
-          <div>
-            <dt>靈感來源</dt>
-            <dd>
-              <a
-                href="https://patatap.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                >Patatap ↗</a
-              >
-            </dd>
-          </div>
-        </dl>
-        <p class="about-fine">
-          Tetotap 是非官方粉絲二次創作。Teto 角色權利歸
-          線・小山乃舞世・TWINDRILL
-          所有。人聲為重新合成的演奏短句，搭配原創伴奏。
-        </p>
-        <a
-          class="guidelines-link"
-          href="https://kasaneteto.jp/guidelines/"
-          target="_blank"
-          rel="noopener noreferrer"
-          >重音 Teto 使用規範 ↗</a
-        >
-      </div>
-    </dialog>
-    <noscript
-      ><div class="noscript-message">
-        請啟用 JavaScript，讓 Teto 的聲音開始播放。
-      </div></noscript
-    >
-  </body>
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="重音 Teto 版本的通过点击/触摸播放声音并出现变化图案的互动内容。">
+  <title>Tetotap</title>
+  <link rel="apple-touch-icon" href="icon.png">
+  <link href="css/css.css" rel="stylesheet">
+  <link charset="UTF-8" href="shared/sp/css/common.css" rel="stylesheet">
+  <link charset="utf-8" href="css/mikutap.css" rel="stylesheet">
+  <script charset="utf-8" src="js/jquery.min.js" type="text/javascript"></script>
+  <script charset="utf-8" src="js/pixi.min.js" type="text/javascript"></script>
+  <script charset="utf-8" src="js/gsap.min.js" type="text/javascript"></script>
+  <script charset="UTF-8" src="shared/js/common-2.min.js" type="text/javascript"></script>
+  <script charset="utf-8" src="js/mikutap.js" type="text/javascript"></script>
+</head>
+
+<body>
+  <div id="view"></div>
+  <div id="scene_top">
+    <h1>Tetotap</h1>
+    <div id="ng">
+      <p class="atten">十分抱歉<br>您的浏览器并不支持本页面需要的特性</p>
+    </div>
+    <div class="ok">
+      <p id="bt_start"><a href="">!开始!</a></p>
+    </div>
+    <p id="bt_about"><a href="">*关于*</a></p>
+    <div class="ok">
+      <p class="attention">※请打开声音并享受。</p>
+    </div>
+     <div class="ok">
+     <p class="tit"><strong>注意！搬运内容，原页面(Origin Site): <a href="https://aidn.jp/mikutap">https://aidn.jp/mikutap</a></strong></p>
+    </div>
+  </div>
+  <div id="scene_loading">
+    <hr size="1" color="#fff"> </div>
+  <div id="scene_main">
+    <div class="set">
+      <p class="attention">点击 &amp; 拖动或者按任意键!</p>
+      <p id="bt_feedback"><a href="">反馈: 开启</a></p>
+      <p id="bt_backtrack"><a href="">背景音乐: 开启</a></p>
+    </div>
+  </div>
+  <div id="about_cover"></div>
+  <div id="about">
+    <div id="about_in">
+      <p class="close"><span id="bt_close">×</span></p>
+      <p class="con"> 声音来源 <a href="https://kasaneteto.jp/utau/" target="_blank">重音テト / Kasane Teto</a> </p>
+      <p class="con"> 作者 <a href="https://aidn.jp" target="_blank">daniwell</a> (<a href="https://twitter.com/daniwell_aidn" target="_blank">twitter</a>) </p>
+      <p class="link"> 灵感来源 <a href="http://patatap.com/" target="_blank">Patatap</a><br>(令人赞叹的网页!)</p>
+    </div>
+  </div>
+  <div id="bt_back">＜返回</div>
+  <div id="bt_fs">□全屏显示</div>
+</body>
+
 </html>

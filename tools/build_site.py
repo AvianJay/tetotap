@@ -7,10 +7,10 @@ import shutil
 ROOT = Path(__file__).resolve().parents[1]
 DESTINATION = ROOT / "_site"
 FILES = [
-    "index.html", "icon.png", "favicon.svg", "favicon.ico",
-    "assets/teto.svg", "assets/teto-mark.svg",
-    "css/css.css", "css/tetotap.css",
-    "js/pixi.min.js", "js/gsap.min.js", "js/tetotap.js",
+    "index.html", "icon.png", "favicon.ico",
+    "css/css.css", "css/mikutap.css", "shared/sp/css/common.css",
+    "js/jquery.min.js", "js/pixi.min.js", "js/gsap.min.js", "js/mikutap.js",
+    "shared/js/common-2.min.js",
     "data/main/main.json", "data/track/track.json",
 ]
 FILES += [p.relative_to(ROOT).as_posix() for p in sorted((ROOT / "fonts").glob("*.woff2"))]
@@ -19,6 +19,11 @@ for group, expected in [("main", 32), ("track", 11)]:
     clips = json.loads((ROOT / f"data/{group}/{group}.json").read_text(encoding="utf-8"))
     assert set(clips) == {f"{i}.mp3" for i in range(expected)}, f"Invalid {group} sounds"
     assert all(value.startswith("data:audio/mp3;base64,") for value in clips.values())
+
+if DESTINATION.exists():
+    assert DESTINATION.resolve() == ROOT.resolve() / "_site"
+    assert DESTINATION.resolve().is_relative_to(ROOT.resolve())
+    shutil.rmtree(DESTINATION)
 
 for relative in FILES:
     source = ROOT / relative

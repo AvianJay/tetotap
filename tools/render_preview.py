@@ -22,10 +22,10 @@ FRAME_SIZE = (960, 675)
 def render():
     frames = []
     allowed = {
-        "index.html", "icon.png", "favicon.svg", "favicon.ico",
-        "assets/teto.svg", "assets/teto-mark.svg",
-        "css/css.css", "css/tetotap.css", "js/pixi.min.js",
-        "js/gsap.min.js", "js/tetotap.js", "data/main/main.json",
+        "index.html", "icon.png", "favicon.ico",
+        "css/css.css", "css/mikutap.css", "shared/sp/css/common.css",
+        "js/jquery.min.js", "js/pixi.min.js", "js/gsap.min.js", "js/mikutap.js",
+        "shared/js/common-2.min.js", "data/main/main.json",
         "data/track/track.json",
     }
     allowed.update(p.relative_to(ROOT).as_posix() for p in (ROOT / "fonts").glob("*.woff2"))
@@ -55,7 +55,7 @@ def render():
           return (seed - 1) / 2147483646;
         };""")
         page.goto(ORIGIN)
-        page.locator("#bt_start").wait_for(state="visible")
+        page.locator("#bt_start a").wait_for(state="visible")
         page.evaluate("document.fonts.ready")
         page.mouse.move(12, 12)
 
@@ -68,7 +68,7 @@ def render():
         for _ in range(14):
             capture()
             page.wait_for_timeout(65)
-        page.locator("#bt_start").click()
+        page.locator("#bt_start a").click()
         page.locator("#scene_main").wait_for(state="visible")
         keys = ["a", "k", "s", "0", "b", "r", "4", "g", "w", "d", "2", "m", "f", "z", "c", "x"]
         for i in range(60):
@@ -76,8 +76,9 @@ def render():
                 page.keyboard.press(keys[(i // 3) % len(keys)])
             capture()
             page.wait_for_timeout(65)
+        page.locator("#bt_back").wait_for(state="visible")
         page.locator("#bt_back").click()
-        page.locator("#bt_start").evaluate("button => button.blur()")
+        page.evaluate("document.activeElement.blur()")
         page.mouse.move(12, 12)
         for _ in range(14):
             capture()
