@@ -1,6 +1,0 @@
-.playwright-mcp/
-__pycache__/
-*.pyc
-_site/
-.env
-.env.*
