@@ -1,0 +1,9 @@
+.git
+.playwright-mcp
+__pycache__
+*.pyc
+.env
+.env.*
+tools
+_site
+.github
